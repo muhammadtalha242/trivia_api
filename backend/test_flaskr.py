@@ -88,7 +88,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['deleted'], question.id)
 
     def test_422_deleting_non_existing_question(self):
-        response = self.client().delete('/questions/999')
+        response = self.client().delete('/questions/a')
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 404)
@@ -176,7 +176,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['current_category'])
 
     def test_404_get_questions_per_category(self):
-        response = self.client().get('/categories/999/questions')
+        response = self.client().get('/categories/a/questions')
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 404)
