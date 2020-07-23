@@ -128,7 +128,7 @@ def create_app(test_config=None):
     @app.route('/questions', methods=['POST'])
     def add_question():
         body = request.get_json()
-        if not ('question' in body or 'answer' in body or 'difficulty' in body or 'category' in body):
+        if not ('question' in body and 'answer' in body and 'difficulty' in body and 'category' in body):
             abort(422)
         try:
             question = Question(question=body.get('question'), answer=body.get(
@@ -191,7 +191,7 @@ def create_app(test_config=None):
         except:
             abort(404)
     '''
-  @TODO: 
+   
   Create a POST endpoint to get questions to play the quiz. 
   This endpoint should take category and previous question parameters 
   and return a random questions within the given category, 
@@ -206,21 +206,25 @@ def create_app(test_config=None):
         try:
 
             body = request.get_json()
-
+            
             if not ('quiz_category' in body and 'previous_questions' in body):
                 abort(422)
 
             category = body.get('quiz_category')
             previous_questions = body.get('previous_questions')
 
-            if category['type'] == 'click':
+            if category['id'] == 0:
+               
                 available_questions = Question.query.filter(
                     Question.id.notin_((previous_questions))).all()
+
             else:
+                print('category: ',category)
+
                 available_questions = Question.query.filter_by(
                     category=category['id']).filter(Question.id.notin_((previous_questions))).all()
 
-                new_question = available_questions[random.randrange(
+            new_question = available_questions[random.randrange(
                     0, len(available_questions))].format() if len(available_questions) > 0 else None
 
             return jsonify({
@@ -232,7 +236,7 @@ def create_app(test_config=None):
         return
 
     '''
-  @TODO: 
+   
   Create error handlers for all expected errors 
   including 404 and 422. 
   '''
